@@ -1,6 +1,6 @@
 const AllRooms = require("./AllRooms");
 const assignPlayer = require("./AssignPlayer");
-const { createPrivateRoom, createQuickRoom } = require("./CreateRoom");
+const { createRoom, createOrJoinQuickRoom } = require("./CreateRoom");
 const { deleteRoom, deleteRooms_Admin } = require("./DeleteRoom");
 const findRoom = require("./FindRoom");
 const GenerateRandomName = require("./GenerateRoomName");
@@ -11,8 +11,8 @@ const UpadateRoom = require("./UpdateRooms");
 module.exports = {
   findRoom,
   assignPlayer,
-  createPrivateRoom,
-  createQuickRoom,
+  createRoom,
+  createOrJoinQuickRoom,
   deleteRoom,
   deleteRooms_Admin,
   playerLeavesRoom,

@@ -23,22 +23,28 @@ async function deleteRooms_Admin(player_id) {
 }
 
 async function deleteRoom(room_id, isPublic) {
-  const rooms = await AllRooms(isPublic);
+  let rooms = await AllRooms(isPublic);
   const room = findInArray(room_id, rooms);
 
-  if (room) {
-    console.log(`room ${room.id} deleted successfully`);
-    const removeRoom = rooms.splice(room, 1)[0];
-    UpadateRoom(rooms, isPublic);
-    return removeRoom;
-  } else {
+  if (!room) {
     console.log("room does not exist");
+    return {
+      room: null,
+      success: false,
+      message: "room does not exist",
+    };
+  }
+
+  if (room) {
+    rooms = rooms.filter((rm) => rm.id !== room_id);
+    UpadateRoom(rooms, isPublic);
+    console.log(`room ${room.id} deleted successfully`);
+    return { room, success: true, message: "successful" };
   }
 }
 
 function removeRoomORPlayer(rooms, player_id) {
   const removed = [];
-  console.log(rooms);
 
   const newRooms = rooms.filter((r) => {
     const pD = r.players.find((player) => player.id === player_id);
@@ -52,17 +58,23 @@ function removeRoomORPlayer(rooms, player_id) {
         r = null;
         console.log("removed room");
       } else if (pD.role === 222) {
-        // remove player fromm room
-        r.players = r.players.filter((player) => player.id !== pD.id);
-        console.log("removed player");
+        if (r.bot) {
+          r = null;
+          console.log("removed bot room");
+        } else {
+          // remove player fromm room
+          r.players = r.players.filter((player) => player.id !== pD.id);
+          console.log("removed player");
+        }
       } else {
         console.log("what kind of role is this?");
       }
 
       removed.push({ room: sRoom, user: pD });
-
-      return r;
+    } else {
+      console.log("i neva see this user b for");
     }
+    return r;
   });
 
   return { newRooms, removed };

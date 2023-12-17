@@ -1,0 +1,54 @@
+#!/usr/bin/env node
+
+const server = require("../server.js");
+
+const port = normalizePort(process.env.PORT || 7500);
+
+server.listen(port, () => {
+  console.log(`Server running at PORT ${port} -- http://localhost:${port}`);
+});
+
+server.on("error", onError);
+server.on("listening", onListening);
+
+function normalizePort(value) {
+  const port = parseInt(value, 10);
+
+  if (isNaN(port)) {
+    return value;
+  }
+
+  if (port >= 0) {
+    return port;
+  }
+
+  return flase;
+}
+
+function onError(err) {
+  if (err.syscall !== "listen") {
+    throw err;
+  }
+
+  const bind = typeof post === "str" ? "Pipe " + port : "Port " + port;
+
+  switch (err.code) {
+    case "EACCES":
+      console.error(bind + " require elevated privileges");
+      process.exit(1);
+      break;
+    case "EADDRINUSE":
+      console.error(bind + " is already in use");
+      process.exit(1);
+      break;
+    default:
+      throw err;
+  }
+}
+
+function onListening() {
+  const address = server.address();
+  const bind =
+    typeof address === "string" ? "pipe " + address : "port " + address.port;
+  /*debug('Listening on ' + bind);*/
+}

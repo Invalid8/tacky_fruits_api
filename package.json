@@ -2,7 +2,7 @@
   "name": "fruit-tac-toe",
   "version": "1.0.0",
   "description": "The api for the fruit tac toe app, that includes the socket connection",
-  "main": "server.js",
+  "main": "./bin/www",
   "scripts": {
     "start": "node .",
     "dev": "nodemon ."

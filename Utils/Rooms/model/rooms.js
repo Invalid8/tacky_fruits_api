@@ -26,12 +26,10 @@ const readData = async (filepath) => {
       const dir = filepath.split(path.basename(filepath)).join("");
       if (!fs.existsSync(dir)) fsPromises.mkdir(dir);
       fsPromises.writeFile(filepath, "[]");
+      return fsPromises.readFile(filepath, "utf-8");
     }
 
-    const data = await fsPromises.readFile(filepath, "utf-8");
-    if (!data) return [];
-
-    return data;
+    return fsPromises.readFile(filepath, "utf-8");
   } catch (error) {
     console.error(error);
   }

@@ -1,26 +1,9 @@
 const express = require("express");
 const app = express();
-const port = process.env.PORT || 7500;
 const http = require("http");
-
-const socketIo = require("socket.io");
 
 const cors = require("cors");
 const corsOptions = require("./config/corsOption");
-const {
-  createQuickRoom,
-  playerLeavesRoom,
-
-  createPrivateRoom,
-  assignPlayer,
-  deleteRoom,
-
-  sendRooms,
-  deleteRooms_Admin,
-} = require("./Utils/Rooms/Controller");
-
-const { formatMessage } = require("./Utils/messages");
-const { randomUUID } = require("crypto");
 
 app.use(cors(corsOptions));
 
@@ -28,185 +11,59 @@ app.use(express.static("public"));
 
 const server = http.createServer(app);
 
+// ----sokect connection
+
+const { sendRooms, deleteRooms_Admin } = require("./Utils/Rooms/Controller");
+
+const { formatMessage } = require("./Utils/messages");
+const {
+  CreatePrivateRoom,
+  LeaveRoom,
+  JoinPrivateRoom,
+  JoinPublicRoom,
+  CreatePublicRoom,
+  CreateOrJoinQuickRoom,
+} = require("./Connections");
+const BotInfo = require("./bot/info");
+
+const socketIo = require("socket.io");
+const { getCurrentUser, userLeaves } = require("./Utils/Users/users");
+
 const io = new socketIo.Server(server, {
   cors: corsOptions,
 });
-
-const bot = {
-  name: "tackyFruit",
-};
 
 io.on("connection", async (socket) => {
   socket.emit("publicRooms", await sendRooms(true));
   socket.emit("privateRooms", await sendRooms(false));
 
-  socket.on("createQuickRoom", async (host_data) => {
-    if (host_data) {
-      const room = await createQuickRoom({ ...host_data, id: socket.id });
-      socket.join(room.id);
-
-      socket.emit(
-        "message",
-        formatMessage(bot.name, `Welcome to room ${room.name}`)
-      );
-
-      socket.broadcast
-        .to(room.id)
-        .emit(
-          "message",
-          formatMessage(
-            host_data.name,
-            `${host_data.name} has joined the lobby`
-          )
-        );
-
-      io.to(room.id).emit("roomPlayers", {
-        room,
-      });
-    } else {
-      socket.emit(
-        "errorMessage",
-        formatMessage(bot.name, `host data not found`, true)
-      );
-    }
+  socket.on("createPublicRoom", async ({ host_data, room_data }) => {
+    CreatePublicRoom(socket, io, { host_data, room_data });
   });
 
   socket.on("createPrivateRoom", async ({ host_data, room_data }) => {
-    if (host_data && room_data) {
-      const room_code = randomUUID().substring(0, 8);
-
-      const { room, message, success } = await createPrivateRoom(
-        { ...host_data, id: socket.id },
-        { ...room_data, id: room_code }
-      );
-
-      if (success) {
-        socket.join(room.id);
-
-        socket.emit(
-          "message",
-          formatMessage(bot.name, `Welcome to room ${room.name}`)
-        );
-
-        socket.broadcast
-          .to(room.id)
-          .emit(
-            "message",
-            formatMessage(
-              host_data.name,
-              `${host_data.name} has joined the lobby`
-            )
-          );
-
-        io.to(room.id).emit("roomPlayers", {
-          room,
-        });
-      } else {
-        socket.emit("errorMessage", formatMessage(bot.name, message, true));
-      }
-    } else {
-      socket.emit(
-        "errorMessage",
-        formatMessage(bot.name, `host data not found`, true)
-      );
-    }
+    CreatePrivateRoom(socket, io, { host_data, room_data });
   });
 
-  socket.on("joinQuickRoom", async ({ player_data, room_id }) => {
-    if (room_id && player_data) {
-      const { room, success, message } = await assignPlayer(
-        room_id,
-        player_data,
-        true
-      );
+  socket.on("QuickRoom", async (player_data) => {
+    CreateOrJoinQuickRoom(socket, io, player_data);
+  });
 
-      if (success) {
-        socket.join(room.id);
-
-        socket
-          .to(room.id)
-          .emit(
-            "message",
-            formatMessage(bot.name, `Welcome to room ${room.name}`)
-          );
-
-        socket.broadcast
-          .to(room.id)
-          .emit(
-            "message",
-            formatMessage(
-              player_data.name,
-              `${player_data.name} has joined the lobby`
-            )
-          );
-      } else {
-        socket.emit("errorMessage", formatMessage(bot.name, message, true));
-      }
-    } else {
-      console.error(message);
-    }
+  socket.on("joinPublicRoom", async ({ player_data, room_id }) => {
+    JoinPublicRoom(socket, io, { player_data, room_id });
   });
 
   socket.on("joinPrivateRoom", async ({ player_data, room_id }) => {
-    if (room_id && player_data) {
-      const { room, message, success } = await assignPlayer(
-        room_id,
-        player_data,
-        false
-      );
+    JoinPrivateRoom(socket, io, { player_data, room_id });
+  });
 
-      if (success) {
-        socket.join(room.id);
-
-        socket.emit(
-          "message",
-          formatMessage(bot.name, `Welcome to room ${room.name}`)
-        );
-
-        socket.broadcast
-          .to(room.id)
-          .emit(
-            "message",
-            formatMessage(
-              player_data.name,
-              `${player_data.name} has joined the lobby`
-            )
-          );
-      } else {
-        socket.emit("errorMessage", formatMessage(bot.name, message, true));
-      }
-    } else {
-      console.error(message);
-    }
+  socket.on(`chatMessage`, ({ room_id, chat }) => {
+    const user = getCurrentUser(socket.id);
+    if (user) io.to(room_id).emit("message", formatMessage(user.name, chat));
   });
 
   socket.on("leaveRoom", async ({ player_data, room_data }) => {
-    if (room_data && player_data) {
-      const room = await playerLeavesRoom(
-        room_data.id,
-        player_data.id,
-        room_data.isPublic
-      );
-
-      if (room) {
-        if (player.isAdmin) {
-          deleteRoom(room.id, room_data.isPublic);
-          socket.in(room.id).disconnectSockets();
-        } else {
-          socket.leave(room.id);
-        }
-      } else {
-        socket.emit(
-          "errorMessage",
-          formatMessage(bot.name, `room not found`, true)
-        );
-      }
-    } else {
-      socket.emit(
-        "errorMessage",
-        formatMessage(bot.name, `players_id or room_id not found`, true)
-      );
-    }
+    LeaveRoom(socket, io, { player_data, room_data });
   });
 
   socket.on("disconnect", async () => {
@@ -218,11 +75,20 @@ io.on("connection", async (socket) => {
         .emit(
           "message",
           formatMessage(
-            bot.user,
+            BotInfo.name,
             `${re.user && re.user.name} has left the lobby`
           )
         );
+
+      if (re.room.bot && re.room.players.length === 1) {
+        io.to(re.room.id).emit("disconnected", true);
+      }
     });
+
+    const player = userLeaves(socket.id);
+    if (player) {
+      io.to(player.room.id).emit("disconnected", true);
+    }
 
     console.log(`A user with id ${socket.id} just left`);
   });
@@ -230,8 +96,4 @@ io.on("connection", async (socket) => {
   console.log(`A user with id ${socket.id} just joined`);
 });
 
-server.listen(port, () =>
-  console.log(
-    `Example app listening on port ${port}! --- http://localhost:${port}`
-  )
-);
+module.exports = server;

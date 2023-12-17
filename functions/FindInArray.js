@@ -11,15 +11,3 @@ function findInArray(id, list, idToo = false) {
 }
 
 module.exports = findInArray;
-
-const { item: room, id } = findInArray(
-  23,
-  [
-    { id: 11, r: "res" },
-    { id: 23, r: "eres" },
-    { id: 1, r: "yes" },
-  ],
-  true
-);
-
-console.log(room, id);

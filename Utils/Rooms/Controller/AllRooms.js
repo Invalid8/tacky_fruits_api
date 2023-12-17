@@ -5,7 +5,9 @@ async function AllRooms(isPublic = true) {
     ? await ROOM.public_rooms()
     : await ROOM.private_rooms();
 
-  return JSON.parse(rooms);
+  if (!rooms || rooms === "") return [];
+
+  return JSON.parse(rooms) ? JSON.parse(rooms) : [];
 }
 
 module.exports = AllRooms;
