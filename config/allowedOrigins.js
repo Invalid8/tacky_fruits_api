@@ -5,7 +5,8 @@ const allowedOrigins = [
   "http://127.0.0.1:7500",
   "http://192.168.69.34:7500",
   "http://192.168.69.34:1234",
-  "https://tacky-fruits.up.railway.app",
+  "https://tackyfruits.vercel.app",
+"https://tackyfruitsapi-production.up.railway.app/"
 ];
 
 module.exports = allowedOrigins;
