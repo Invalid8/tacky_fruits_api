@@ -1,6 +1,7 @@
-const { playerLeavesRoom } = require("../Utils/Rooms/Controller");
-const { userLeaves } = require("../Utils/Users/users");
+const { playerLeavesRoom, deleteRoom } = require("../Utils/Rooms/Controller");
+const { userLeaves, getRoomUsers } = require("../Utils/Users/users");
 const { formatMessage } = require("../Utils/messages");
+const { ExtractData } = require("../Utils/Rooms/Functions");
 const BotInfo = require("../bot/info");
 
 const LeaveRoom = async (socket, io, { player_data, room_data }) => {
@@ -29,9 +30,16 @@ const LeaveRoom = async (socket, io, { player_data, room_data }) => {
       if (deathray) {
         console.log("make user disconnect");
         io.to(room_data.id).emit("disconnected", true);
+        if (room_data.isPublic) {
+          void deleteRoom(room_data.id, room_data.isPublic);
+        }
       }
-
       socket.leave(room_data.id);
+
+      io.to(room_data.id).emit("lobby", {
+        room: ExtractData(room, "ROOM"),
+        players: getRoomUsers(room.id),
+      });
     } else {
       socket.emit("errorMessage", formatMessage(BotInfo.name, message, true));
       console.log("e", message, success);

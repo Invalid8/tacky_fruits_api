@@ -3,6 +3,7 @@ const { ExtractData } = require("../Utils/Rooms/Functions");
 const { userJoin, getRoomUsers } = require("../Utils/Users/users");
 const { formatMessage } = require("../Utils/messages");
 const BotInfo = require("../bot/info");
+const LeaveRoom = require("./LeaveRoom");
 
 const CreateOrJoinQuickRoom = async (socket, io, player_data) => {
   socket.emit("ready", false);
@@ -39,6 +40,21 @@ const CreateOrJoinQuickRoom = async (socket, io, player_data) => {
         room: ExtractData(room, "ROOM"),
         players: getRoomUsers(room.id),
       });
+
+      const go = getRoomUsers(room.id)
+        ? getRoomUsers(room.id).length === 2
+        : false;
+
+      io.to(room.id).emit("ready", {
+        isReady: go,
+      });
+
+      console.log("reday", go);
+
+      setTimeout(() => {
+        io.to(room.id).emit("disconnected", true);
+        LeaveRoom(socket, io, { player_data, room });
+      }, 1000 * 60 * 5);
     } else {
       socket.emit("errorMessage", formatMessage(BotInfo.name, message, true));
     }

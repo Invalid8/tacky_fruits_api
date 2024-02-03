@@ -23,6 +23,7 @@ const {
   JoinPublicRoom,
   CreatePublicRoom,
   CreateOrJoinQuickRoom,
+  GamePlay,
 } = require("./Connections");
 const BotInfo = require("./bot/info");
 
@@ -57,7 +58,11 @@ io.on("connection", async (socket) => {
     JoinPrivateRoom(socket, io, { player_data, room_id });
   });
 
-  socket.on(`chatMessage`, ({ room_id, chat }) => {
+  socket.on("GamePlay", async ({ players, room_data }) => {
+    GamePlay(socket, io, { players, room_data });
+  });
+
+  socket.on("chatMessage", ({ room_id, chat }) => {
     const user = getCurrentUser(socket.id);
     if (user) io.to(room_id).emit("message", formatMessage(user.name, chat));
   });

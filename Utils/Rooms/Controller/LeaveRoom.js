@@ -44,55 +44,58 @@ async function playerLeavesRoom(room_id, player_id, isPublic) {
     }
 
     if (player) {
-      if (room.bot && room.players.length === 1) {
-        console.log("deleted quick room", room.id, "since 1 players is left");
-        const {
-          rooom: room0,
-          message: message0,
-          success: success0,
-        } = await deleteRoom(room_id, isPublic);
-        return {
-          room: room0,
-          message: message0,
-          success: success0,
-          player,
-          deathray: true,
-        };
-      }
-      if (player.role === 111) {
-        console.log("deleted room", room.id);
-        const {
-          rooom: room0,
-          message: message0,
-          success: success0,
-        } = await deleteRoom(room_id, isPublic);
-        return {
-          room: room0,
-          message: message0,
-          success: success0,
-          player,
-          deathray: true,
-        };
-      } else if (player.role === 222) {
-        rooms[id].players = rooms[id].players.filter(
-          (player) => player.id !== player_id
-        );
-
-        UpadateRoom(rooms, isPublic);
-
-        console.log("player", player.id, "left", room.id);
-        return {
-          room,
-          player,
-          success: true,
-          message: "succesfull",
-          deathray: false,
-        };
+      if (room.bot) {
+        if (room.players.length < 2) {
+          return clearAll({ player, room_id, isPublic });
+        } else {
+          return clearOnce({ rooms, room, id, player, isPublic, player_id });
+        }
       } else {
-        console.log("Issue of the unknown");
+        if (player.role === 111) {
+          console.log("deleted quick room", room.id, "since 1 player is left");
+          return clearAll({ player, room_id, isPublic });
+        } else if (player.role === 222) {
+          return clearOnce({ rooms, room, id, player, isPublic, player_id });
+        } else {
+          console.log("Issue of the unknown");
+        }
       }
     }
   }
 }
 
 module.exports = playerLeavesRoom;
+
+async function clearAll({ player, room_id, isPublic }) {
+  console.log("all");
+  const { room, message, success } = await deleteRoom(room_id, isPublic);
+
+  return {
+    room,
+    message,
+    success,
+    player,
+    deathray: true,
+  };
+}
+
+async function clearOnce({ rooms, isPublic, id, player, room, player_id }) {
+  console.log("once");
+  const players = rooms[id].players.filter((player) => player.id !== player_id);
+
+  if (players.length < 2) rooms[id].opened = true;
+
+  rooms[id].players = players;
+  console.log(rooms);
+
+  void UpadateRoom(rooms, isPublic);
+
+  console.log("player", player.id, "left", room.id);
+  return {
+    room,
+    player,
+    success: true,
+    message: "succesfull",
+    deathray: false,
+  };
+}

@@ -42,7 +42,10 @@ async function assignPlayer(room_id, player_data, isPublic, isBot = false) {
   if (room) {
     room.players.push({ ...player_data, role: 222 });
 
-    if (room.bot) room.opened = false;
+    if (room.bot)
+      if (room.players.length == 2) {
+        room.opened = false;
+      }
 
     rooms[id] = room;
     UpadateRoom(rooms, isPublic);
