@@ -63,6 +63,7 @@ async function GamePlay(socket, io, { players, room_data }) {
       room,
       players: xplayers,
       winner: lobby.PVP.TackyBlocks.winner,
+      cId: lobby.currentPlayerId,
     });
 
     socket.on("clear", () => {
@@ -75,6 +76,7 @@ async function GamePlay(socket, io, { players, room_data }) {
         room,
         players: xplayers,
         winner: lobby.PVP.TackyBlocks.winner,
+        cId: lobby.currentPlayerId,
       });
     });
 
@@ -89,6 +91,7 @@ async function GamePlay(socket, io, { players, room_data }) {
               room,
               players: xplayers,
               winner: lobby.PVP.TackyBlocks.winner,
+              cId: lobby.currentPlayerId,
             });
 
             LOBBY.updateLobbyX(room.id, "currentPlayerId", players[0].id);
