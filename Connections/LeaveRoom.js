@@ -28,7 +28,6 @@ const LeaveRoom = async (socket, io, { player_data, room_data }) => {
         );
 
       if (deathray) {
-        console.log("make user disconnect");
         io.to(room_data.id).emit("disconnected", true);
         if (room_data.isPublic) {
           void deleteRoom(room_data.id, room_data.isPublic);

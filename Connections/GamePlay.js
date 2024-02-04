@@ -1,5 +1,6 @@
 const { Play } = require("../Utils/Game");
 const { lobbies, addLobby } = require("../Utils/Game/data");
+const { playerLeavesRoom } = require("../Utils/Rooms/Controller");
 const { formatMessage } = require("../Utils/messages");
 const BotInfo = require("../bot/info");
 
@@ -8,7 +9,6 @@ const LOBBY = {
 
   addLobby: function (newLobby) {
     const tts = this.lobbies;
-    console.log(tts);
 
     this.lobbies = [...tts, newLobby];
 
@@ -101,6 +101,20 @@ async function GamePlay(socket, io, { players, room_data }) {
         }
       } else {
         console.error("missing parameters");
+      }
+    });
+
+    socket.on("end", async () => {
+      const { success } = await playerLeavesRoom(
+        room_data.id,
+        socket.id,
+        room_data.isPublic
+      );
+
+      if (success) {
+        io.to(room_data.id).emit("GameEnd");
+        void deleteRoom(room_data.id, room_data.isPublic);
+        socket.leave(room_data.id);
       }
     });
   } else {

@@ -64,7 +64,10 @@ io.on("connection", async (socket) => {
 
   socket.on("chatMessage", ({ room_id, chat }) => {
     const user = getCurrentUser(socket.id);
-    if (user) io.to(room_id).emit("message", formatMessage(user.name, chat));
+    if (user) {
+      io.to(room_id).emit("message", formatMessage(user.name, chat));
+      socket.broadcast.to(room_id).emit("msg", formatMessage(user.name, chat));
+    }
   });
 
   socket.on("leaveRoom", async ({ player_data, room_data }) => {
@@ -86,13 +89,13 @@ io.on("connection", async (socket) => {
         );
 
       if (re.room.bot && re.room.players.length === 1) {
-        io.to(re.room.id).emit("disconnected", true);
+        io.to(re.room.id).emit("disconnected");
       }
     });
 
     const player = userLeaves(socket.id);
     if (player) {
-      io.to(player.room.id).emit("disconnected", true);
+      io.to(player.room.id).emit("disconnected");
     }
 
     console.log(`A user with id ${socket.id} just left`);
