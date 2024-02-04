@@ -41,7 +41,7 @@ const updateData = async (filepath, newData) => {
       if (!fs.existsSync(filepath)) {
         const dir = filepath.split(path.basename(filepath)).join("");
         if (!fs.existsSync(dir)) fsPromises.mkdir(dir);
-        fsPromises.writeFile(filepath, "[]");
+        if (fs.existsSync(dir)) fsPromises.writeFile(filepath, "[]", "utf-8");
       }
 
       fsPromises.writeFile(filepath, JSON.stringify(newData), "utf-8");
