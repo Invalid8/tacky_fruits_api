@@ -1,6 +1,5 @@
 const { Play } = require("../Utils/Game");
-const { lobbies, addLobby } = require("../Utils/Game/data");
-const { playerLeavesRoom } = require("../Utils/Rooms/Controller");
+const { playerLeavesRoom, deleteRoom } = require("../Utils/Rooms/Controller");
 const { formatMessage } = require("../Utils/messages");
 const BotInfo = require("../bot/info");
 

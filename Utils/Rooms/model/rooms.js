@@ -36,16 +36,18 @@ const readData = async (filepath) => {
 };
 
 const updateData = async (filepath, newData) => {
-  try {
-    if (!fs.existsSync(filepath)) {
-      const dir = filepath.split(path.basename(filepath)).join("");
-      if (!fs.existsSync(dir)) fsPromises.mkdir(dir);
-      fsPromises.writeFile(filepath, "[]");
-    }
+  if (filepath && newData) {
+    try {
+      if (!fs.existsSync(filepath)) {
+        const dir = filepath.split(path.basename(filepath)).join("");
+        if (!fs.existsSync(dir)) fsPromises.mkdir(dir);
+        fsPromises.writeFile(filepath, "[]");
+      }
 
-    fsPromises.writeFile(filepath, JSON.stringify(newData), "utf-8");
-  } catch (error) {
-    console.error(error);
+      fsPromises.writeFile(filepath, JSON.stringify(newData), "utf-8");
+    } catch (error) {
+      console.error(error);
+    }
   }
 };
 
