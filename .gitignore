@@ -23,7 +23,7 @@ npm-debug.log*
 yarn-debug.log*
 
 /public/index.html
-/Utils/Rooms/data
+/Utils/Rooms/data/*
 
 # workspace
 .code-workspace
