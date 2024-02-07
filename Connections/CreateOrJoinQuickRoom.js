@@ -54,7 +54,7 @@ const CreateOrJoinQuickRoom = async (socket, io, player_data) => {
       setTimeout(() => {
         io.to(room.id).emit("disconnected", true);
         LeaveRoom(socket, io, { player_data, room });
-      }, 1000 * 60 * 5);
+      }, 1000 * 60 * 30);
     } else {
       socket.emit("errorMessage", formatMessage(BotInfo.name, message, true));
     }
