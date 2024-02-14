@@ -2,14 +2,15 @@ const { randomUUID } = require("crypto");
 const findInArray = require("../../functions/FindInArray");
 
 class Scores {
-  constructor(Players) {
-    if (!Players) {
+  constructor(players) {
+    if (!players) {
       console.log("Missing player parameters");
       return;
     }
 
-    this.Players = Players;
+    this.players = players;
     this.score = this.setup();
+    this.scores = this.score.value;
   }
 
   all() {
@@ -17,18 +18,16 @@ class Scores {
   }
 
   setup() {
+    const ps = this.players.map((p) => {
+      let x = p;
+      x.score = 0;
+
+      return x;
+    });
+
     const mod = {
       id: randomUUID().substring(0, 10),
-      value: [
-        {
-          ...this.Players[0].stat(),
-          score: 0,
-        },
-        {
-          ...this.Players[1].stat(),
-          score: 0,
-        },
-      ],
+      value: ps,
     };
 
     return mod;
@@ -51,15 +50,15 @@ class Scores {
     Players.forEach((Player) => {
       const { id: ID } = findInArray(Player.player.id, this.score?.value, true);
 
-      if (ID) {
+      if (ID === -1) {
         console.log("player not found");
         return;
       }
 
-      this.score.value[ID].score += Player.player?.score;
+      this.score.value[ID].score = Player.player?.score;
     });
 
-    return this.score.value;
+    return Players;
   }
 
   pScore(id) {

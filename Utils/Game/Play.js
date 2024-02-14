@@ -1,5 +1,4 @@
 const Player = require("./Player");
-const Scores = require("./Score");
 const TicTac = require("./TicTac");
 
 class Play {
@@ -14,25 +13,22 @@ class Play {
       return x;
     });
 
-    const GameScore = new Scores(Players);
-    const TackyBlocks = new TicTac(Players, GameScore);
+    const TackyBlocks = new TicTac(Players, settings);
 
     this.settings = settings;
     this.Players = Players;
-    this.currentID = players[0].id;
-    this.GameScore = GameScore;
     this.TackyBlocks = TackyBlocks;
+    this.grandWinner = undefined;
   }
 
   start() {
     this.players = this.Players.map((p) => {
       const x = p.stat();
-      x.score = this.GameScore.pScore(x.id);
+      x.score = this.TackyBlocks.pScore(x.id);
       return x;
     });
 
     this.tablets = this.TackyBlocks.all();
-    this.scores = this.GameScore.all();
     this.room = this.settings.room;
   }
 
@@ -46,11 +42,43 @@ class Play {
       return;
     }
 
-    return this.GameScore?.pScore(id);
+    return this.TackyBlocks?.pScore(id);
   }
 
-  changeCurrentID(id) {
-    this.currentID = id;
+  click() {
+    this.players = this.Players.map((p) => {
+      const x = p.stat();
+      x.score = this.TackyBlocks.pScore(x.id);
+      return x;
+    });
+
+    if (this.TackyBlocks.gameEnd) {
+      const p0 = this.players[0];
+      const p1 = this.players[1];
+      let winner;
+
+      const tie = this.players[0].score == this.players[0].score;
+
+      // if (tie) {
+      //   winner = undefined;
+      // } else {
+      //   winner = p0.score > p1.score ? (winner = p0) : (winner = p1);
+      // }
+      if (p0.score > p1.score) {
+        winner = p0;
+      } else if (p0.score < p1.score) {
+        winner = p1;
+      } else if (p0.score == p1.score) {
+        winner = undefined;
+      }
+
+      console.log(winner);
+
+      this.grandWinner = {
+        isTie: tie,
+        winner,
+      };
+    }
   }
 }
 
