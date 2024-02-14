@@ -6,7 +6,7 @@ const BotInfo = require("../bot/info");
 
 async function GamePlay(socket, io, { players, room_data }) {
   if (players && room_data) {
-    const RT = 2;
+    const RT = 10;
 
     let lobby = LOBBY.lobbies.find((c) => c.id === room_data.id);
 
