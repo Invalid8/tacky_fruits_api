@@ -1,7 +1,9 @@
 const ROOM = require("../model/rooms");
 
-function UpadateRoom(nRooms, isPublic) {
-  isPublic ? ROOM.updatePublicRooms(nRooms) : ROOM.updatePrivateRooms(nRooms);
+async function UpadateRoom(nRooms, isPublic) {
+  (await isPublic)
+    ? ROOM.updatePublicRooms(nRooms)
+    : ROOM.updatePrivateRooms(nRooms);
 
   return nRooms;
 }

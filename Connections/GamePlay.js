@@ -6,7 +6,7 @@ const BotInfo = require("../bot/info");
 
 async function GamePlay(socket, io, { players, room_data }) {
   if (players && room_data) {
-    const RT = 10;
+    const RT = 6;
 
     let lobby = LOBBY.lobbies.find((c) => c.id === room_data.id);
 
@@ -37,6 +37,21 @@ async function GamePlay(socket, io, { players, room_data }) {
 
     socket.on("clear", () => {
       lobby.PVP.reset();
+
+      io.to(room.id).emit("lobby", {
+        tablets: lobby.PVP.TackyBlocks.all(),
+        room,
+        players: xplayers,
+        winner: lobby.PVP.TackyBlocks.winner,
+        roundsLeft: lobby.PVP.TackyBlocks.roundsLeft,
+        settings: { rounds: RT },
+        grandWinner: lobby.PVP.grandWinner,
+        cId: lobby.currentPlayerId,
+      });
+    });
+
+    socket.on("replay", () => {
+      lobby.PVP.replay();
 
       io.to(room.id).emit("lobby", {
         tablets: lobby.PVP.TackyBlocks.all(),

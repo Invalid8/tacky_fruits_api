@@ -58,6 +58,16 @@ class TicTac {
     this.isTie = false;
   }
 
+  replay() {
+    this.list = this.setTacs();
+    this.winner = undefined;
+    this.isTie = false;
+    this.score = this.setup();
+
+    this.roundsLeft = this.settings.rounds;
+    this.gameEnd = false;
+  }
+
   playSpot(player, index) {
     if (!player || !index) {
       console.error("missing parameters");
@@ -81,8 +91,8 @@ class TicTac {
     };
 
     if (this.judge()) {
-      this.roundsLeft = this.roundsLeft - 1;
       this.addScore(this.winner.id);
+      this.roundsLeft = this.roundsLeft - 1;
 
       if (this.roundsLeft < 1) {
         this.gameEnd = true;
@@ -93,6 +103,11 @@ class TicTac {
 
     if (this.isTie) {
       this.reset();
+      this.roundsLeft = this.roundsLeft - 1;
+
+      if (this.roundsLeft < 1) {
+        this.gameEnd = true;
+      }
     }
 
     return this.list;

@@ -36,6 +36,20 @@ class Play {
     this.TackyBlocks.reset();
   }
 
+  replay() {
+    this.grandWinner = undefined;
+    this.TackyBlocks.replay();
+
+    this.players = this.Players.map((p) => {
+      const x = p.stat();
+      x.score = this.TackyBlocks.pScore(x.id);
+      return x;
+    });
+
+    this.tablets = this.TackyBlocks.all();
+    this.room = this.settings.room;
+  }
+
   pStat(id) {
     if (!id) {
       console.error("missing parameters");

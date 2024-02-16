@@ -1,23 +1,19 @@
-const { createOrJoinQuickRoom } = require("../Utils/Rooms/Controller");
+const { aiRoom } = require("../Utils/Rooms/Controller/CreateRoom");
 const { ExtractData } = require("../Utils/Rooms/Functions");
 const { userJoin, getRoomUsers } = require("../Utils/Users/users");
 const { formatMessage } = require("../Utils/messages");
 const BotInfo = require("../bot/info");
 const ForceExit = require("./func/ForceExit");
 
-const CreateOrJoinQuickRoom = async (socket, io, player_data) => {
+const AIRoom = async (socket, io, { player_data, mode }) => {
   socket.emit("ready", false);
-
-  if (player_data) {
+  if (player_data && mode) {
     const {
       room,
       success,
       message,
       player: player0,
-    } = await createOrJoinQuickRoom({
-      ...player_data,
-      id: socket.id,
-    });
+    } = await aiRoom({ ...player_data, id: socket.id }, mode);
 
     if (success) {
       const player = userJoin(socket.id, player0, ExtractData(room, "ROOM"));
@@ -49,7 +45,7 @@ const CreateOrJoinQuickRoom = async (socket, io, player_data) => {
         isReady: go,
       });
 
-      console.log("ready", go);
+      console.log("reday", go);
 
       ForceExit(socket, io, { player_data, room });
     } else {
@@ -60,4 +56,4 @@ const CreateOrJoinQuickRoom = async (socket, io, player_data) => {
   }
 };
 
-module.exports = CreateOrJoinQuickRoom;
+module.exports = AIRoom;

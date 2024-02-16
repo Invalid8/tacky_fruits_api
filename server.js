@@ -29,6 +29,7 @@ const BotInfo = require("./bot/info");
 
 const socketIo = require("socket.io");
 const { getCurrentUser, userLeaves } = require("./Utils/Users/users");
+const AIRoom = require("./Connections/AiRoom");
 
 const io = new socketIo.Server(server, {
   cors: corsOptions,
@@ -48,6 +49,10 @@ io.on("connection", async (socket) => {
 
   socket.on("QuickRoom", async (player_data) => {
     CreateOrJoinQuickRoom(socket, io, player_data);
+  });
+
+  socket.on("Computer", async ({ player_data, mode }) => {
+    AIRoom(socket, io, { player_data, mode });
   });
 
   socket.on("joinPublicRoom", async ({ player_data, room_id }) => {
