@@ -1,10 +1,11 @@
 const findInArray = require("../../../functions/FindInArray");
+const { EventLogger, ErrorLogger } = require("../../../middleware/Logger");
 const AllRooms = require("./AllRooms");
 const UpadateRoom = require("./UpdateRooms");
 
 async function assignPlayer(room_id, player_data, isPublic, isBot = false) {
   if (!room_id || !player_data) {
-    console.log("Missing parameters. roomId | playerData");
+    ErrorLogger("Missing parameters. roomId | playerData");
     return {
       room: undefined,
       success: false,
@@ -49,7 +50,7 @@ async function assignPlayer(room_id, player_data, isPublic, isBot = false) {
 
     rooms[id] = room;
     UpadateRoom(rooms, isPublic);
-    console.log(
+    EventLogger(
       `player ${player_data.id} added to room ${room.id} successfully!`
     );
 

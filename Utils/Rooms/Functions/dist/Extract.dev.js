@@ -1,11 +1,13 @@
+"use strict";
+
 // 1 - player data PLAYER
 // 2 - room info ROOM
+var _require = require("../../../middleware/Logger"),
+    ErrorLogger = _require.ErrorLogger;
 
-const { ErrorLogger } = require("../../../middleware/Logger");
-
-const player_code = "PLAYER";
-const opponent_code = "OPPONENT";
-const room_code = "ROOM";
+var player_code = "PLAYER";
+var opponent_code = "OPPONENT";
+var room_code = "ROOM";
 
 function ExtractData(data, type) {
   if (!data) {
@@ -14,34 +16,31 @@ function ExtractData(data, type) {
 
   switch (type) {
     case room_code:
-      const room = data;
-
+      var room = data;
       return {
         id: room.id,
         name: room.name,
         isPublic: room.isPublic,
         current_players: room.players.length,
-        vsAI: room.vsAI,
+        vsAI: room.vsAI
       };
 
     case player_code:
-      const player_data = data;
-
+      var player_data = data;
       return {
         id: player_data.id,
         name: player_data.name,
         character: player_data.character,
-        role: player_data.role === 111 ? "ADMIN" : type,
+        role: player_data.role === 111 ? "ADMIN" : type
       };
 
     case opponent_code:
-      const opponent_data = data;
-
+      var opponent_data = data;
       return {
         id: opponent_data.id,
         name: opponent_data.name,
         character: opponent_data.character,
-        role: opponent_data.role === 111 ? "ADMIN" : type,
+        role: opponent_data.role === 111 ? "ADMIN" : type
       };
 
     default:

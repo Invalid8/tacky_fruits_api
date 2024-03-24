@@ -5,6 +5,7 @@ const assignPlayer = require("./AssignPlayer");
 const GenerateRandomName = require("./GenerateRoomName");
 const BotInfo = require("../../../bot/info");
 const FRUITY = require("../../Props/Fruity");
+const { ErrorLogger, EventLogger } = require("../../../middleware/Logger");
 
 const roomSchema = (id, name, expire = 60, max_players_no = 2) => {
   return {
@@ -18,7 +19,7 @@ const roomSchema = (id, name, expire = 60, max_players_no = 2) => {
 
 async function aiRoom(player_data, mode) {
   if (!player_data || !mode) {
-    console.log("missing parameters");
+    ErrorLogger("missing parameters");
     return;
   }
 
@@ -33,8 +34,9 @@ async function aiRoom(player_data, mode) {
   room.isPublic = true;
   room.bot = true;
   room.opened = true;
+  room.vsAI = mode;
 
-  console.log(`bot room ${room.id} created successfully`);
+  EventLogger(`bot room ${room.id} created successfully`);
 
   let C_ID = Math.floor(Math.random() * FRUITY.length);
   let char = FRUITY[C_ID];
@@ -61,12 +63,13 @@ async function aiRoom(player_data, mode) {
     player: { ...player_data, role: 222 },
     message: "successfull",
     success: true,
+    computer: computer_data,
   };
 }
 
 async function createOrJoinQuickRoom(player_data) {
   if (!player_data) {
-    console.log("missing parameters");
+    ErrorLogger("missing parameters");
     return;
   }
 
@@ -82,11 +85,11 @@ async function createOrJoinQuickRoom(player_data) {
       !x.players.find((p) => p.character.key === player_data.character.key)
   );
 
-  console.log("open room exist", openedRoom ? "true" : "false");
+  EventLogger("open room exist", openedRoom ? "true" : "false");
 
   if (openedRoom) {
     // join
-    console.log("ran this level");
+    EventLogger("ran this level");
     return assignPlayer(openedRoom.id, player_data, true, true);
   } else {
     // create
@@ -100,7 +103,7 @@ async function createOrJoinQuickRoom(player_data) {
     room.opened = true;
     room.players[0] = { ...player_data, role: 222 };
     UpadateRoom([...rooms, room], true);
-    console.log(`bot room ${room.id} created successfully`);
+    EventLogger(`bot room ${room.id} created successfully`);
     return {
       room,
       player: { ...player_data, role: 222 },
@@ -112,7 +115,7 @@ async function createOrJoinQuickRoom(player_data) {
 
 async function createRoom(host_player_data, room_data, isPublic) {
   if (!room_data || !host_player_data) {
-    console.log("Add a name and key to room");
+    EventLogger("Add a name and key to room");
     return;
   }
 
@@ -137,7 +140,7 @@ async function createRoom(host_player_data, room_data, isPublic) {
 
   UpadateRoom([...rooms, room], isPublic);
 
-  console.log(
+  EventLogger(
     `${isPublic ? "public" : "private"} room ${room.id} created successfully`
   );
   return {

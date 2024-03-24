@@ -1,10 +1,11 @@
 const { randomUUID } = require("crypto");
 const findInArray = require("../../functions/FindInArray");
+const { ErrorLogger } = require("../../middleware/Logger");
 
 class Scores {
   constructor(players) {
     if (!players) {
-      console.log("Missing player parameters");
+      ErrorLogger("Missing player parameters");
       return;
     }
 
@@ -51,7 +52,7 @@ class Scores {
       const { id: ID } = findInArray(Player.player.id, this.score?.value, true);
 
       if (ID === -1) {
-        console.log("player not found");
+        ErrorLogger("player not found");
         return;
       }
 

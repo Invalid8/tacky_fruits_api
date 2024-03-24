@@ -3,6 +3,8 @@ const { playerLeavesRoom, deleteRoom } = require("../Utils/Rooms/Controller");
 const { formatMessage } = require("../Utils/messages");
 const { userLeaves } = require("../Utils/Users/users");
 const BotInfo = require("../bot/info");
+const PlayData = require("./func/PlayData");
+const { EventLogger, ErrorLogger } = require("../middleware/Logger");
 
 async function GamePlay(socket, io, { players, room_data }) {
   if (players && room_data) {
@@ -11,85 +13,66 @@ async function GamePlay(socket, io, { players, room_data }) {
     let lobby = LOBBY.lobbies.find((c) => c.id === room_data.id);
 
     if (!lobby) {
-      const PVP = new Play({ room: room_data, rounds: RT }, players);
-      lobby = LOBBY.addLobby({
-        id: room_data.id,
-        currentPlayerId: players[0].id,
-        PVP,
-      });
+      if (!room_data.vsAI) {
+        const PVP = new Play(
+          { room: room_data, rounds: RT, isComputer: false },
+          players
+        );
+
+        lobby = LOBBY.addLobby({
+          id: room_data.id,
+          currentPlayerId: players[0].id,
+          PVP,
+        });
+
+        lobby.PVP.start();
+      } else {
+        const PVC = new Play(
+          { room: room_data, rounds: RT, isComputer: true },
+          players
+        );
+        lobby = LOBBY.addLobby({
+          id: room_data.id,
+          currentPlayerId: players[0].id,
+          PVC,
+        });
+        lobby.PVC.start();
+      }
     }
 
-    lobby.PVP.start();
+    const room = room_data.vsAI ? lobby.PVC.room : lobby.PVP.room;
 
-    const room = lobby.PVP.room;
-    const xplayers = lobby.PVP.players;
-
-    io.to(room.id).emit("lobby", {
-      tablets: lobby.PVP.tablets,
-      room,
-      players: xplayers,
-      winner: lobby.PVP.TackyBlocks.winner,
-      roundsLeft: lobby.PVP.TackyBlocks.roundsLeft,
-      settings: { rounds: RT },
-      grandWinner: lobby.PVP.grandWinner,
-      cId: lobby.currentPlayerId,
-    });
+    PlayData(io, socket, { room, lobby, RT });
 
     socket.on("clear", () => {
-      lobby.PVP.reset();
-
-      io.to(room.id).emit("lobby", {
-        tablets: lobby.PVP.TackyBlocks.all(),
-        room,
-        players: xplayers,
-        winner: lobby.PVP.TackyBlocks.winner,
-        roundsLeft: lobby.PVP.TackyBlocks.roundsLeft,
-        settings: { rounds: RT },
-        grandWinner: lobby.PVP.grandWinner,
-        cId: lobby.currentPlayerId,
-      });
+      room_data.vsAI ? lobby.PVC.reset() : lobby.PVP.reset();
+      PlayData(io, socket, { room, lobby, RT });
     });
 
     socket.on("replay", () => {
-      lobby.PVP.replay();
+      room_data.vsAI ? lobby.PVC.replay() : lobby.PVP.replay();
 
-      io.to(room.id).emit("lobby", {
-        tablets: lobby.PVP.TackyBlocks.all(),
-        room,
-        players: xplayers,
-        winner: lobby.PVP.TackyBlocks.winner,
-        roundsLeft: lobby.PVP.TackyBlocks.roundsLeft,
-        settings: { rounds: RT },
-        grandWinner: lobby.PVP.grandWinner,
-        cId: lobby.currentPlayerId,
-      });
+      PlayData(io, socket, { room, lobby, RT });
     });
 
     socket.on("click", async ({ player_data, tab_id }) => {
       if (player_data && tab_id) {
         if (lobby.currentPlayerId !== player_data.id) {
-          const NewTabs = lobby.PVP.TackyBlocks.playSpot(player_data, tab_id);
+          const NewTabs = room_data.vsAI
+            ? lobby.PVC.TackyBlocks.playSpot(player_data, tab_id)
+            : lobby.PVP.TackyBlocks.playSpot(player_data, tab_id);
 
           if (NewTabs) {
-            io.to(room.id).emit("lobby", {
-              tablets: NewTabs,
-              room,
-              players: xplayers,
-              winner: lobby.PVP.TackyBlocks.winner,
-              roundsLeft: lobby.PVP.TackyBlocks.roundsLeft,
-              settings: { rounds: RT },
-              grandWinner: lobby.PVP.grandWinner,
-              cId: lobby.currentPlayerId,
-            });
+            PlayData(io, socket, { room, lobby, RT });
 
             LOBBY.updateLobbyX(room.id, "currentPlayerId", players[0].id);
-            lobby.PVP.click();
+            room_data.vsAI ? lobby.PVC.click() : lobby.PVP.click();
           }
         } else {
-          console.log("Not your turn");
+          EventLogger("Not your turn");
         }
       } else {
-        console.error("missing parameters");
+        ErrorLogger("missing parameters");
       }
     });
 

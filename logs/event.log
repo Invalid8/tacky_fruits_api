@@ -1,0 +1,69 @@
+[01:44PM]•[03/24/2024]	-	"false"	-
+	open room exist
+[01:44PM]•[03/24/2024]	
+	bot room 4df29c64 created successfully
+[01:44PM]•[03/24/2024]	
+	updated users
+[01:44PM]•[03/24/2024]	
+	- {"id":"mBnOjuIcGqaSh6eNAAAC","name":"jack","character":{"id":7,"key":"pineapple","value_e":"🍍","value":"/pineapple111.c57fd3d8.svg","color":"#807d00d8"},"role":"PLAYER"}
+[01:44PM]•[03/24/2024]	
+	- {"id":"mBnOjuIcGqaSh6eNAAAC","name":"jack","character":{"id":7,"key":"pineapple","value_e":"🍍","value":"/pineapple111.c57fd3d8.svg","color":"#807d00d8"},"role":"PLAYER"}
+[01:44PM]•[03/24/2024]	
+	- {"id":"mBnOjuIcGqaSh6eNAAAC","name":"jack","character":{"id":7,"key":"pineapple","value_e":"🍍","value":"/pineapple111.c57fd3d8.svg","color":"#807d00d8"},"role":"PLAYER"}
+[01:44PM]•[03/24/2024]	-	"Game Ready"	-	(./Connections/CreateOrJoinQuickRoom.js)
+	ready: false
+[01:44PM]•[03/24/2024]	-	"true"	-
+	open room exist
+[01:44PM]•[03/24/2024]	
+	ran this level
+[01:44PM]•[03/24/2024]	
+	player dPqwe5MsH2t3VLC5AAAD added to room 4df29c64 successfully!
+[01:44PM]•[03/24/2024]	
+	updated users
+[01:44PM]•[03/24/2024]	
+	- {"id":"mBnOjuIcGqaSh6eNAAAC","name":"jack","character":{"id":7,"key":"pineapple","value_e":"🍍","value":"/pineapple111.c57fd3d8.svg","color":"#807d00d8"},"role":"PLAYER"}
+	- {"id":"dPqwe5MsH2t3VLC5AAAD","name":"jack","character":{"id":10,"key":"cherries","value_e":"🍒","value":"/cherries111.ee4a27c5.svg","color":"#ba0923d8"},"role":"PLAYER"}
+[01:44PM]•[03/24/2024]	
+	- {"id":"mBnOjuIcGqaSh6eNAAAC","name":"jack","character":{"id":7,"key":"pineapple","value_e":"🍍","value":"/pineapple111.c57fd3d8.svg","color":"#807d00d8"},"role":"PLAYER"}
+	- {"id":"dPqwe5MsH2t3VLC5AAAD","name":"jack","character":{"id":10,"key":"cherries","value_e":"🍒","value":"/cherries111.ee4a27c5.svg","color":"#ba0923d8"},"role":"PLAYER"}
+[01:44PM]•[03/24/2024]	
+	- {"id":"mBnOjuIcGqaSh6eNAAAC","name":"jack","character":{"id":7,"key":"pineapple","value_e":"🍍","value":"/pineapple111.c57fd3d8.svg","color":"#807d00d8"},"role":"PLAYER"}
+	- {"id":"dPqwe5MsH2t3VLC5AAAD","name":"jack","character":{"id":10,"key":"cherries","value_e":"🍒","value":"/cherries111.ee4a27c5.svg","color":"#ba0923d8"},"role":"PLAYER"}
+[01:44PM]•[03/24/2024]	-	"Game Ready"	-	(./Connections/CreateOrJoinQuickRoom.js)
+	ready: true
+[01:44PM]•[03/24/2024]	
+	Not your turn
+[01:45PM]•[03/24/2024]	
+	once
+[01:45PM]•[03/24/2024]	
+	- {"id":"f0e7ba98","name":"Yuzu_Kumquat","players":[{"name":"ola","character":{"id":6,"key":"avocado","value_e":"🥑","value":"/avoc111.342c1edc.png","color":"#394611d8"},"id":"yVsNSzmpXtnBdMNiAAAD","role":222},{"id":"43dbd6c2-f","name":"Tardy","role":222,"character":{"id":19,"key":"tomatoe","value_e":"🍅","value":"/tomatoe111.svg","color":"#d13834d8"}}],"expire":30000,"max_players_no":2,"isPublic":true,"bot":true,"opened":true,"vsAI":"NORMAL"}
+	- {"id":"3bfe8147","name":"Orange_Breadfruit","players":[{"name":"ola","character":{"id":9,"key":"carrot","value_e":"🥕","value":"/carrot111.35548f31.svg","color":"#fc9502d8"},"id":"2leRnJRfIKGpU9AeAAAB","role":222},{"name":"mark","character":{"id":12,"key":"grape","value_e":"🍇","value":"/grape111.0f6ae5d6.svg","color":"#820c97d8"},"id":"P_iFuVNwaPgXHARHAAAD","role":222}],"expire":30000,"max_players_no":2,"isPublic":true,"bot":true,"opened":false}
+	- {"id":"4df29c64","name":"Ackee_Banana","players":[{"name":"jack","character":{"id":7,"key":"pineapple","value_e":"🍍","value":"/pineapple111.c57fd3d8.svg","color":"#807d00d8"},"id":"mBnOjuIcGqaSh6eNAAAC","role":222}],"expire":30000,"max_players_no":2,"isPublic":true,"bot":true,"opened":true}
+[01:45PM]•[03/24/2024]	-	"dPqwe5MsH2t3VLC5AAAD"	-	(left)
+	player
+[01:45PM]•[03/24/2024]	
+	removed user
+[01:45PM]•[03/24/2024]	
+	room 4df29c64 deleted successfully
+[01:45PM]•[03/24/2024]	
+	i neva see this user b for
+[01:45PM]•[03/24/2024]	
+	i neva see this user b for
+[01:45PM]•[03/24/2024]	
+	- 
+[01:45PM]•[03/24/2024]	
+	removed user
+[01:45PM]•[03/24/2024]	-	"socket connection"	-	(./server.js)
+	A user with id mBnOjuIcGqaSh6eNAAAC just left
+[01:45PM]•[03/24/2024]	
+	i neva see this user b for
+[01:45PM]•[03/24/2024]	
+	i neva see this user b for
+[01:45PM]•[03/24/2024]	-	"socket connection"	-	(./server.js)
+	A user with id dPqwe5MsH2t3VLC5AAAD just left
+[01:45PM]•[03/24/2024]	
+	- 
+[03:38PM]•[03/24/2024]	-	"socket connection"	-	(./server.js)
+	A user with id 9rODMmH0oDXvkr8dAAAG just joined
+[03:38PM]•[03/24/2024]	-	"socket connection"	-	(./server.js)
+	A user with id hfZvW6kfcsVEXDyEAAAH just joined

@@ -2,8 +2,10 @@ const { formatMessage } = require("../../Utils/messages");
 const BotInfo = require("../../bot/info");
 const LeaveRoom = require("../LeaveRoom");
 
-function ForceExit(socket, io, { player_data, room }) {
+function ForceExit(socket, io, { player_data, room }, time) {
+  if (!time) time = 1000 * 60 * 30; // 30 mins
   setTimeout(() => {
+    LeaveRoom(socket, io, { player_data, room });
     io.to(room.id).emit(
       "disconnected",
       formatMessage(
@@ -12,11 +14,7 @@ function ForceExit(socket, io, { player_data, room }) {
         true
       )
     );
-    setTimeout(() => {
-      io.to(room.id).emit("disconnected", true);
-      LeaveRoom(socket, io, { player_data, room });
-    }, 2000);
-  }, 1000 * 60 * 30);
+  }, time);
 }
 
 module.exports = ForceExit;

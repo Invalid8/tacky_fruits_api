@@ -1,11 +1,16 @@
 #!/usr/bin/env node
 
+const { EventLogger } = require("../middleware/Logger.js");
 const server = require("../server.js");
 
 const port = normalizePort(process.env.PORT || 7500);
 
 server.listen(port, () => {
-  console.log(`Server running at PORT ${port} -- http://localhost:${port}`);
+  EventLogger(
+    `Server running at PORT ${port} -- http://localhost:${port}`,
+    "server runtime",
+    "./bin/www"
+  );
 });
 
 server.on("error", onError);

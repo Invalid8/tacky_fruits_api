@@ -1,4 +1,5 @@
 const findInArray = require("../../../functions/FindInArray");
+const { EventLogger } = require("../../../middleware/Logger");
 const AllRooms = require("./AllRooms");
 const UpadateRoom = require("./UpdateRooms");
 
@@ -18,7 +19,7 @@ async function deleteRooms_Admin(player_id) {
   UpadateRoom(roomsPrivate, false);
 
   const removed = [...removedPublic, ...removedPrivate];
-  console.log(removed);
+  EventLogger(removed);
   return removed;
 }
 
@@ -27,7 +28,7 @@ async function deleteRoom(room_id, isPublic) {
   const room = findInArray(room_id, rooms);
 
   if (!room) {
-    console.log("room does not exist");
+    EventLogger("room does not exist");
     return {
       room: null,
       success: false,
@@ -38,7 +39,7 @@ async function deleteRoom(room_id, isPublic) {
   if (room) {
     rooms = rooms.filter((rm) => rm.id !== room_id);
     UpadateRoom(rooms, isPublic);
-    console.log(`room ${room.id} deleted successfully`);
+    EventLogger(`room ${room.id} deleted successfully`);
     return { room, success: true, message: "successful" };
   }
 }
@@ -56,23 +57,23 @@ function removeRoomORPlayer(rooms, player_id) {
       if (pD.role === 111) {
         // remove room
         r = null;
-        console.log("removed room");
+        EventLogger("removed room");
       } else if (pD.role === 222) {
         if (r.bot) {
           r = null;
-          console.log("removed bot room");
+          EventLogger("removed bot room");
         } else {
           // remove player fromm room
           r.players = r.players.filter((player) => player.id !== pD.id);
-          console.log("removed player");
+          EventLogger("removed player");
         }
       } else {
-        console.log("what kind of role is this?");
+        EventLogger("what kind of role is this?");
       }
 
       removed.push({ room: sRoom, user: pD });
     } else {
-      console.log("i neva see this user b for");
+      EventLogger("i neva see this user b for");
     }
     return r;
   });

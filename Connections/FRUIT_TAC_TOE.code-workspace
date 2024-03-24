@@ -1,11 +1,33 @@
 {
-	"folders": [
-		{
-			"path": "../../FRUIT_TAC_TOE"
-		},
-		{
-			"path": ".."
-		}
-	],
-	"settings": {}
+  "folders": [
+    {
+      "path": "../../FRUIT_TAC_TOE"
+    },
+    {
+      "path": ".."
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/.git": true,
+      "**/.svn": true,
+      "**/.hg": true,
+      "**/CVS": true,
+      "**/.DS_Store": true,
+      "**/Thumbs.db": true,
+      "**/__pycache__": true,
+      "**/.cache": true,
+      "**/.coverage": true,
+      "**/.coverage.*": true,
+      "**/.hypothesis": true,
+      "**/.mypy_cache": true,
+      "**/.nox": true,
+      "**/.pytest_cache": true,
+      "**/.ruff_cache": true,
+      "**/.tox": true,
+      "**/node_modules": false
+    },
+    "editor.formatOnSave": true,
+    "compile-hero.disable-compile-files-on-did-save-code": false
+  }
 }

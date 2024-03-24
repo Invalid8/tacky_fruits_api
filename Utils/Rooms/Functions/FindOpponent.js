@@ -1,12 +1,14 @@
+const { EventLogger, ErrorLogger } = require("../../../middleware/Logger");
+
 function FindOpponent(players, player_id) {
   if (!players || !player_id) {
-    console.log("missing paraameters");
+    ErrorLogger("missing paraameters");
     return undefined;
   }
 
   const opponent = players.find((p) => p.id !== player_id);
 
-  console.log(players, opponent);
+  EventLogger(players, opponent);
 
   return opponent;
 }

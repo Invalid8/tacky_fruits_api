@@ -1,3 +1,4 @@
+const { EventLogger } = require("../../middleware/Logger");
 const Player = require("./Player");
 const TicTac = require("./TicTac");
 
@@ -86,7 +87,7 @@ class Play {
         winner = undefined;
       }
 
-      console.log(winner);
+      EventLogger(winner);
 
       this.grandWinner = {
         isTie: tie,

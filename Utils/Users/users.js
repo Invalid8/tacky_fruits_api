@@ -1,3 +1,4 @@
+const { EventLogger } = require("../../middleware/Logger");
 const { ExtractData } = require("../Rooms/Functions");
 
 let users = [];
@@ -7,7 +8,7 @@ let users = [];
 function userJoin(id, player_data, room) {
   const user = { id, ...player_data, room };
   users.push(user);
-  console.log("updated users");
+  EventLogger("updated users");
 
   return user;
 }
@@ -27,7 +28,7 @@ function userLeaves(id) {
   if (index !== -1) {
     const user = users[index];
     users = users.filter((u) => u.id !== id);
-    console.log("removed user");
+    EventLogger("removed user");
     return user;
   }
   return undefined;
@@ -43,7 +44,7 @@ function getRoomUsers(room_id) {
     const cut = fUsers.map((x) => {
       return ExtractData(x, "PLAYER");
     });
-    console.log(cut);
+    EventLogger(cut);
     return cut;
   }
 }

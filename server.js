@@ -1,20 +1,10 @@
 const express = require("express");
-const app = express();
 const http = require("http");
-
 const cors = require("cors");
 const corsOptions = require("./config/corsOption");
-
-app.use(cors(corsOptions));
-
-app.use(express.static("public"));
-
-const server = http.createServer(app);
-
 // ----sokect connection
 
 const { sendRooms, deleteRooms_Admin } = require("./Utils/Rooms/Controller");
-
 const { formatMessage } = require("./Utils/messages");
 const {
   CreatePrivateRoom,
@@ -26,10 +16,15 @@ const {
   GamePlay,
 } = require("./Connections");
 const BotInfo = require("./bot/info");
-
 const socketIo = require("socket.io");
 const { getCurrentUser, userLeaves } = require("./Utils/Users/users");
-const AIRoom = require("./Connections/AiRoom");
+const { EventLogger } = require("./middleware/Logger");
+const AIRoom = require("./Connections/AIRoom");
+
+const app = express();
+const server = http.createServer(app);
+app.use(cors(corsOptions));
+app.use(express.static("public"));
 
 const io = new socketIo.Server(server, {
   cors: corsOptions,
@@ -103,10 +98,18 @@ io.on("connection", async (socket) => {
       io.to(player.room.id).emit("disconnected");
     }
 
-    console.log(`A user with id ${socket.id} just left`);
+    EventLogger(
+      `A user with id ${socket.id} just left`,
+      "socket connection",
+      "./server.js"
+    );
   });
 
-  console.log(`A user with id ${socket.id} just joined`);
+  EventLogger(
+    `A user with id ${socket.id} just joined`,
+    "socket connection",
+    "./server.js"
+  );
 });
 
 module.exports = server;

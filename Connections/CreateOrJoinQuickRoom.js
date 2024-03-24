@@ -3,6 +3,7 @@ const { ExtractData } = require("../Utils/Rooms/Functions");
 const { userJoin, getRoomUsers } = require("../Utils/Users/users");
 const { formatMessage } = require("../Utils/messages");
 const BotInfo = require("../bot/info");
+const { EventLogger, ErrorLogger } = require("../middleware/Logger");
 const ForceExit = require("./func/ForceExit");
 
 const CreateOrJoinQuickRoom = async (socket, io, player_data) => {
@@ -49,14 +50,22 @@ const CreateOrJoinQuickRoom = async (socket, io, player_data) => {
         isReady: go,
       });
 
-      console.log("ready", go);
+      EventLogger(
+        `ready: ${go}`,
+        "Game Ready",
+        "./Connections/CreateOrJoinQuickRoom.js"
+      );
 
       ForceExit(socket, io, { player_data, room });
     } else {
       socket.emit("errorMessage", formatMessage(BotInfo.name, message, true));
     }
   } else {
-    console.log("missing parameters");
+    ErrorLogger(
+      "missing parameters",
+      "",
+      "./Connections/CreateOrJoinQuickRoom.js"
+    );
   }
 };
 

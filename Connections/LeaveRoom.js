@@ -3,6 +3,7 @@ const { userLeaves, getRoomUsers } = require("../Utils/Users/users");
 const { formatMessage } = require("../Utils/messages");
 const { ExtractData } = require("../Utils/Rooms/Functions");
 const BotInfo = require("../bot/info");
+const { EventLogger, ErrorLogger } = require("../middleware/Logger");
 
 const LeaveRoom = async (socket, io, { player_data, room_data }) => {
   if (room_data && player_data) {
@@ -12,7 +13,7 @@ const LeaveRoom = async (socket, io, { player_data, room_data }) => {
       room_data.isPublic
     );
 
-    console.log("room:", room, "success:", success);
+    EventLogger("room:", room, "success:", success);
 
     if (success) {
       const player = userLeaves(socket.id);
@@ -41,10 +42,10 @@ const LeaveRoom = async (socket, io, { player_data, room_data }) => {
       });
     } else {
       socket.emit("errorMessage", formatMessage(BotInfo.name, message, true));
-      console.log("e", message, success);
+      EventLogger("e", message, success);
     }
   } else {
-    console.log("missing parameters -e");
+    ErrorLogger("missing parameters -e");
   }
 };
 

@@ -1,4 +1,5 @@
 const findInArray = require("../../functions/FindInArray");
+const { ErrorLogger } = require("../../middleware/Logger");
 const GenerateRandomName = require("../Rooms/Controller/GenerateRoomName");
 const { gameWins } = require("./data");
 const { randomUUID } = require("crypto");
@@ -134,14 +135,14 @@ class TicTac {
 
   addScore(PlayerId) {
     if (!PlayerId) {
-      console.error("missing player id");
+      ErrorLogger("missing player id");
       return;
     }
 
     const { id: ID } = findInArray(PlayerId, this.score?.value, true);
 
     if (ID === -1) {
-      console.log("player not found");
+      ErrorLogger("player not found");
       return;
     }
 
