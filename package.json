@@ -5,7 +5,8 @@
   "main": "./bin/www",
   "scripts": {
     "start": "node .",
-    "dev": "nodemon ."
+    "dev": "nodemon .",
+    "build": "node ."
   },
   "author": "",
   "license": "ISC",
