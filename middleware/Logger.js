@@ -100,3 +100,4 @@ function logFormat(log, title, refrence) {
 //   "./rest/people/user"
 // );
 
+module.exports = { EventLogger, ErrorLogger };
