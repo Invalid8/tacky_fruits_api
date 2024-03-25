@@ -56,6 +56,7 @@ async function GamePlay(socket, io, { players, room_data }) {
     });
 
     socket.on("click", async ({ player_data, tab_id }) => {
+      PlayData(io, socket, { room, lobby, RT });
       if (player_data && tab_id) {
         if (lobby.currentPlayerId !== player_data.id) {
           const NewTabs = room_data.vsAI
@@ -69,7 +70,7 @@ async function GamePlay(socket, io, { players, room_data }) {
             room_data.vsAI ? lobby.PVC.click() : lobby.PVP.click();
           }
         } else {
-          EventLogger("Not your turn");
+          //EventLogger("Not your turn");
         }
       } else {
         ErrorLogger("missing parameters");

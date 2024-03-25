@@ -73,7 +73,7 @@ function removeRoomORPlayer(rooms, player_id) {
 
       removed.push({ room: sRoom, user: pD });
     } else {
-      EventLogger("i neva see this user b for");
+      // EventLogger("i neva see this user b for");
     }
     return r;
   });

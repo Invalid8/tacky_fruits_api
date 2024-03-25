@@ -95,7 +95,7 @@ class TicTac {
       this.addScore(this.winner.id);
       this.roundsLeft = this.roundsLeft - 1;
 
-      if (this.roundsLeft < 1) {
+      if (this.roundsLeft == 1) {
         this.gameEnd = true;
       }
     }
@@ -106,7 +106,7 @@ class TicTac {
       this.reset();
       this.roundsLeft = this.roundsLeft - 1;
 
-      if (this.roundsLeft < 1) {
+      if (this.roundsLeft == 1) {
         this.gameEnd = true;
       }
     }

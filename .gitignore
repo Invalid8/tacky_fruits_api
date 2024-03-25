@@ -29,3 +29,5 @@ yarn-debug.log*
 .code-workspace
 .vercel
 logs/event.log
+logs/error.log
+logs/event.log

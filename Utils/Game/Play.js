@@ -19,7 +19,9 @@ class Play {
     this.settings = settings;
     this.Players = Players;
     this.TackyBlocks = TackyBlocks;
+
     this.grandWinner = undefined;
+    this.isTie = false;
   }
 
   start() {
@@ -35,6 +37,8 @@ class Play {
 
   reset() {
     this.TackyBlocks.reset();
+    this.grandWinner = undefined;
+    this.isTie = false;
   }
 
   replay() {
@@ -67,33 +71,21 @@ class Play {
       return x;
     });
 
-    if (this.TackyBlocks.gameEnd) {
-      const p0 = this.players[0];
-      const p1 = this.players[1];
-      let winner;
+    const p0 = this.players[0];
+    const p1 = this.players[1];
 
-      const tie = this.players[0].score == this.players[0].score;
+    let winner;
 
-      // if (tie) {
-      //   winner = undefined;
-      // } else {
-      //   winner = p0.score > p1.score ? (winner = p0) : (winner = p1);
-      // }
-      if (p0.score > p1.score) {
-        winner = p0;
-      } else if (p0.score < p1.score) {
-        winner = p1;
-      } else if (p0.score == p1.score) {
-        winner = undefined;
-      }
-
-      EventLogger(winner);
-
-      this.grandWinner = {
-        isTie: tie,
-        winner,
-      };
+    if (p0.score > p1.score) {
+      winner = p0;
+    } else if (p0.score < p1.score) {
+      winner = p1;
+    } else if (p0.score == p1.score) {
+      winner = undefined;
     }
+
+    this.grandWinner = winner;
+    this.isTie = this.players[0].score == this.players[1].score;
   }
 }
 

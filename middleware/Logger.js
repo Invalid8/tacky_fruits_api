@@ -73,7 +73,7 @@ function logFormat(log, title, refrence) {
   const template = "".concat(
     format(Date.now(), "[hh:mma]•[MM/dd/yyyy]\t"),
     title ? `-\t"${title}"\t-` : "",
-    `\t(${__dirname})`,
+    refrence ? `\t(${refrence})` : "",
     "\n\t",
     isArray ? "- " : "",
     log,

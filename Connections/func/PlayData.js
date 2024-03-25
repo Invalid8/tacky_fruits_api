@@ -7,6 +7,7 @@ function PlayData(io, socket, { room, lobby, RT }) {
     roundsLeft: lobby.PVP.TackyBlocks.roundsLeft,
     settings: { rounds: RT },
     grandWinner: lobby.PVP.grandWinner,
+    isTie: lobby.PVP.isTie,
     cId: lobby.currentPlayerId,
   });
 }
