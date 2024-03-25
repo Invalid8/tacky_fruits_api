@@ -73,7 +73,7 @@ function logFormat(log, title, refrence) {
   const template = "".concat(
     format(Date.now(), "[hh:mma]•[MM/dd/yyyy]\t"),
     title ? `-\t"${title}"\t-` : "",
-    refrence ? `\t(${refrence})` : "",
+    `\t(${__dirname})`,
     "\n\t",
     isArray ? "- " : "",
     log,
@@ -100,4 +100,3 @@ function logFormat(log, title, refrence) {
 //   "./rest/people/user"
 // );
 
-module.exports = { EventLogger, ErrorLogger };

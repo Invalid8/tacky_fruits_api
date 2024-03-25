@@ -7,6 +7,7 @@ const allowedOrigins = [
   "https://tackyfruitsapi-production.up.railway.app/",
   "http://192.168.123.34:1234",
   "http://192.168.123.34:7500",
+  "https://tacky-fruits-api.onrender.com",
 ];
 
 module.exports = allowedOrigins;
